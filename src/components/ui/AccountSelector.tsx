@@ -94,11 +94,12 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
   },
   chip: {
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.md + 2,
-    borderRadius: borderRadius.full,
+    paddingVertical: spacing.sm + 2,
+    paddingHorizontal: spacing.lg,
+    borderRadius: borderRadius.md,
     borderWidth: 1,
-    minHeight: 38,
+    minHeight: 48,
+    minWidth: 104,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -107,8 +108,8 @@ const styles = StyleSheet.create({
     borderColor: colors.buttonPrimaryBg,
   },
   chipUnselected: {
-    backgroundColor: colors.surfaceSubtle,
-    borderColor: colors.borderSubtle,
+    backgroundColor: colors.surface,
+    borderColor: colors.borderDefault,
   },
   chipText: {
     ...typography.headline,
