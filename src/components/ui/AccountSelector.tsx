@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   balanceTextSelected: {
-    color: '#D4D4D4',
+    color: colors.textTertiary,
   },
   balanceTextUnselected: {
     color: colors.textSecondary,

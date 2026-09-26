@@ -70,7 +70,7 @@ export default function AdjustBalanceModal() {
       });
 
       triggerHaptic.notificationSuccess();
-      showToast(`✓ Balance adjusted (${formatMoney(deltaPaise, '₹', { showPlus: true })})`);
+      showToast(`✓ Reality check saved (${formatMoney(deltaPaise, '₹', { showPlus: true })})`);
       router.back();
     } catch (e: any) {
       setError(e?.message || 'Failed to adjust balance');

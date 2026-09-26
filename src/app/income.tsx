@@ -67,7 +67,7 @@ export default function AddMoneyModal() {
       });
 
       triggerHaptic.notificationSuccess();
-      showToast(`✓ +${formatMoney(parsed.paise)} added`);
+      showToast(`✓ +${formatMoney(parsed.paise)} secured!`);
       router.back();
     } catch (e: any) {
       setError(e?.message || 'Failed to record incoming money');

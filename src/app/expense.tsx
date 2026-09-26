@@ -69,7 +69,7 @@ export default function AddExpenseModal() {
       });
 
       triggerHaptic.notificationSuccess();
-      showToast(`✓ ${formatMoney(parsed.paise)} recorded`);
+      showToast(`✓ ${formatMoney(parsed.paise)} spent. Damage recorded.`);
       router.back();
     } catch (e: any) {
       setError(e?.message || 'Failed to save expense');

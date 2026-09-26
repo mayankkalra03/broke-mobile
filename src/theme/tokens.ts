@@ -1,42 +1,53 @@
 export const colors = {
-  // Backgrounds
-  background: '#F9F9F7', // Warm neutral background
-  surface: '#FFFFFF',    // Crisp clean surface
-  surfaceSubtle: '#F2F2EE', // Subtle inset or secondary surface
-  surfaceHover: '#EBEBE6',
+  // Backgrounds - Warm & Tactile Parchment (No pure white, no harshness)
+  background: '#F5F2EB',    // Warm organic parchment
+  surface: '#FAF8F4',       // Soft warm cream (replaces pure #FFFFFF)
+  surfaceSubtle: '#ECE7DE', // Warm stone subtle surface
+  surfaceHover: '#E3DDD3',
 
-  // Text
-  textPrimary: '#141413',   // Near-black primary text
-  textSecondary: '#6E6D68', // Muted slate-gray
-  textTertiary: '#9E9D97',  // Soft tertiary text
-  textInverse: '#FFFFFF',
+  // Text (No pure black, no stark white)
+  textPrimary: '#262320',   // Warm roast espresso / deep umber
+  textSecondary: '#787066', // Warm stone secondary
+  textTertiary: '#A39B91',  // Soft parchment stone
+  textInverse: '#F5F2EB',   // Soft warm cream text for dark buttons
 
   // Borders & Dividers
-  borderSubtle: '#E8E7E1',
-  borderDefault: '#DCDAD3',
-  borderFocus: '#141413',
+  borderSubtle: '#E8E2D7',  // Soft linen border
+  borderDefault: '#DDD7CC',  // Tactile warm boundary
+  borderFocus: '#262320',
 
-  // Semantic Accents
-  income: '#15803D',       // Calm natural green
-  incomeBg: '#F0FDF4',     // Soft green tint
-  expense: '#141413',      // Neutral primary for expenses (not shouty red!)
-  expenseMuted: '#6E6D68',
-  transfer: '#2563EB',     // Focused subtle blue for transfer
-  transferBg: '#EFF6FF',
-  adjustment: '#D97706',   // Warm amber for reconciliation
-  adjustmentBg: '#FFFBEB',
+  // Account Personality Accents - Unified warm stone palette (no loud blue/yellow)
+  bank: '#262320',          // Warm espresso
+  bankBg: '#ECE7DE',        // Harmonious warm stone pill
+  bankBorder: '#DDD7CC',
+  cash: '#262320',          // Warm espresso
+  cashBg: '#ECE7DE',        // Harmonious warm stone pill
+  cashBorder: '#DDD7CC',
 
-  // Destructive (only used where genuinely necessary)
-  destructive: '#DC2626',
-  destructiveBg: '#FEF2F2',
+  // Semantic Accents - Restrained, warm, zero neon green
+  income: '#7A4C22',        // Warm Antique Cognac (natural warm wealth accent, zero green)
+  incomeBg: '#F2EAE0',      // Soft warm cognac parchment tint
+  incomeBorder: '#DFD2C2',  // Natural warm boundary
+  expense: '#262320',
+  expenseAccent: '#8C3B1E', // Warm terracotta (subtle, muted)
+  expenseBg: '#F5ECE6',
+  expenseBorder: '#E8D5CB',
+  transfer: '#4D443B',      // Warm charcoal stone
+  transferBg: '#ECE7DE',
+  adjustment: '#7A4C22',    // Warm cognac
+  adjustmentBg: '#F2EAE0',
+
+  // Destructive
+  destructive: '#991B1B',   // Muted deep wine / garnet
+  destructiveBg: '#F5ECEB',
 
   // Interactive buttons
-  buttonPrimaryBg: '#141413',
-  buttonPrimaryText: '#FFFFFF',
-  buttonSecondaryBg: '#ECEBE6',
-  buttonSecondaryText: '#141413',
+  buttonPrimaryBg: '#262320',    // Warm espresso solid
+  buttonPrimaryText: '#F5F2EB',  // Warm cream text
+  buttonSecondaryBg: '#ECE7DE',  // Warm stone surface
+  buttonSecondaryText: '#262320',
   buttonMutedBg: 'transparent',
-  buttonMutedText: '#6E6D68',
+  buttonMutedText: '#787066',
 };
 
 export const spacing = {
