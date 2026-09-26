@@ -5,6 +5,15 @@
   **A calm, minimal personal money tracker that answers one question:**  
   *“How much money do I actually have right now?”*
 
+  <br />
+
+  <a href="https://github.com/mayankkalra03/broke-mobile/releases/latest">
+    <img src="https://img.shields.io/badge/Download%20APK-v1.1.0-262320?style=for-the-badge&logo=android&logoColor=F5F2EB" alt="Download APK" />
+  </a>
+
+  <br /><br />
+
+  [![Release](https://img.shields.io/github/v/release/mayankkalra03/broke-mobile?style=flat-square&color=7A4C22)](https://github.com/mayankkalra03/broke-mobile/releases/latest)
   [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
   [![Expo SDK 57](https://img.shields.io/badge/Expo-SDK%2057-000020?style=flat-square&logo=expo&logoColor=white)](https://expo.dev/)
   [![React Native](https://img.shields.io/badge/React%20Native-0.86-61DAFB?style=flat-square&logo=react&logoColor=black)](https://reactnative.dev/)
@@ -22,6 +31,7 @@ Most finance apps are bloated with AI insights, stock trackers, generic motivati
 
 It is an opinionated, ultra-fast personal utility designed for people who simply want to know their net available cash and bank balance at any moment.
 
+- **Warm Tactile Parchment**: Warm paper background (`#F5F2EB`), soft ivory cream surfaces (`#FAF8F4`), and rich warm roast espresso (`#262320`). Zero pure white, zero pure black, zero neon clutter.
 - **Zero AI-slop**: No fake dashboards, no decorative blobs, no 6-page onboarding carousels.
 - **Speed first**: Record a ₹50 coffee in 3 seconds.
 - **100% Offline & Private**: No cloud accounts, no third-party telemetry, no analytics. Your financial ledger never leaves your device.
@@ -32,14 +42,15 @@ It is an opinionated, ultra-fast personal utility designed for people who simply
 ## ✨ Features
 
 - **The Big Number**: Hero balance typography showing your real-time total net money immediately upon launch.
+- **Personality Status Badges**: Contextual lineart badges (`Sparkles`, `Scale`, `Flame`, `Ghost`) reflecting your financial health with situational greetings.
 - **Account Ledger**:
-  - `Bank` and `Physical Cash` balances tracked side-by-side.
+  - `Bank` and `Physical Cash` balances tracked side-by-side in clean rounded rectangle cards.
   - Safe account archiving (preserves ledger integrity without breaking transaction history).
 - **Core Movements**:
-  - **Expense**: Subtracts money from Bank or Cash in seconds. Categories and notes are optional.
-  - **Money In**: Fast deposits for salary, gifts, or repayments.
-  - **Transfer**: Move money between accounts (`Bank → Cash`) with **zero** change to your total balance.
-  - **Reconciliation / Adjust**: Fix real-world cash discrepancies (e.g. lost cash) by creating an audit adjustment record rather than silently overwriting numbers.
+  - **Spent**: Subtracts money from Bank or Cash in seconds. Categories and notes are optional.
+  - **Received**: Fast deposits for salary, gifts, or repayments in warm antique cognac tones.
+  - **Move Money**: Move money between accounts (`Bank → Cash`) with **zero** change to your total balance.
+  - **Reality Check**: Fix real-world cash discrepancies (e.g. lost cash) by creating an audit adjustment record rather than silently overwriting numbers.
 - **Date-Grouped History**: Chronological activity grouped by `Today`, `Yesterday`, etc. with instant type filtering.
 - **Daily 9:00 PM Reminder**: Local offline notification prompt asking *"Did you record today's expenses?"*.
 - **Data Sovereignty**: Complete JSON Export and Import. You own your data forever.
