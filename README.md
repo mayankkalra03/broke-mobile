@@ -1,7 +1,5 @@
 <div align="center">
 
-  <img src="./assets/icon.png" width="112" height="112" alt="Broke? App Icon" />
-
   # Broke?
 
   **A calm, minimal personal money tracker that answers one question:**  
@@ -10,7 +8,7 @@
   [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
   [![Expo SDK 57](https://img.shields.io/badge/Expo-SDK%2057-000020?style=flat-square&logo=expo&logoColor=white)](https://expo.dev/)
   [![React Native](https://img.shields.io/badge/React%20Native-0.86-61DAFB?style=flat-square&logo=react&logoColor=black)](https://reactnative.dev/)
-  [![Offline First](https://img.shields.io/badge/100%25-Offline--First-15803D?style=flat-square)](https://github.com/mayankkalra03/broke-mobile)
+  [![Offline First](https://img.shields.io/badge/100%25-Offline--First-262320?style=flat-square)](https://github.com/mayankkalra03/broke-mobile)
   [![Tests](https://img.shields.io/badge/tests-16%20passed-success?style=flat-square)](https://jestjs.io/)
 
 </div>
