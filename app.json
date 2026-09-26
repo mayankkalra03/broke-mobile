@@ -22,10 +22,21 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "notification": {
+      "icon": "./assets/notification-icon.png",
+      "color": "#262320"
+    },
     "plugins": [
       "expo-router",
       "expo-sqlite",
-      "expo-sharing"
+      "expo-sharing",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#262320"
+        }
+      ]
     ],
     "extra": {
       "router": {},

@@ -117,6 +117,7 @@ export const notificationService = {
           body: "Did you record today's expenses?",
           data: { screen: 'expense' },
           categoryIdentifier: REMINDER_NOTIFICATION_CATEGORY,
+          color: '#262320',
         },
         trigger: {
           type: notifications.SchedulableTriggerInputTypes.DAILY,
@@ -177,6 +178,7 @@ export const notificationService = {
           body: "Did you record today's expenses?",
           data: { screen: 'expense' },
           categoryIdentifier: REMINDER_NOTIFICATION_CATEGORY,
+          color: '#262320',
         },
         trigger: {
           type: notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
