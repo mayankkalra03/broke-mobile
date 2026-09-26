@@ -7,7 +7,7 @@
 
   <br />
 
-  <a href="https://github.com/mayankkalra03/broke-mobile/releases/latest">
+  <a href="https://github.com/mayankkalra03/broke-mobile/releases/download/v1.1.0/Broke-Mobile-App-v1.1.0.apk">
     <img src="https://img.shields.io/badge/Download%20APK-v1.1.0-262320?style=for-the-badge&logo=android&logoColor=F5F2EB" alt="Download APK" />
   </a>
 
