@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="./assets/icon.png" width="112" height="112" alt="Broke? App Icon" style="border-radius: 26px;" />
+  <img src="./assets/icon.png" width="112" height="112" alt="Broke? App Icon" />
 
   # Broke?
 
