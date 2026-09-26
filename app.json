@@ -14,7 +14,7 @@
     "android": {
       "package": "com.mayank.moneytracker",
       "adaptiveIcon": {
-        "backgroundColor": "#141413",
+        "backgroundColor": "#F5F2EB",
         "foregroundImage": "./assets/android-icon-foreground.png"
       },
       "predictiveBackGestureEnabled": false
