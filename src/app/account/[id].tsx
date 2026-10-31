@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -16,7 +16,7 @@ import { colors, typography, spacing, borderRadius } from '../../theme/tokens';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
 import { ConfirmationModal } from '../../components/ui/ConfirmationModal';
-import { AccountType } from '../../types';
+import { Account, AccountType } from '../../types';
 import { triggerHaptic } from '../../utils/haptics';
 
 export default function EditAccountModal() {
@@ -26,8 +26,20 @@ export default function EditAccountModal() {
   const { accounts, updateAccount, archiveAccount, transactions, showToast } = useStore();
 
   const account = accounts.find((a) => a.id === id);
+  const lastAccountRef = useRef<Account | undefined>(account);
+  if (account) {
+    lastAccountRef.current = account;
+  }
+  const currentAccount = account || lastAccountRef.current;
 
-  if (!account) {
+  // Form states - registered unconditionally at top level
+  const [name, setName] = useState(currentAccount?.name || '');
+  const [type, setType] = useState<AccountType>(currentAccount?.type || 'bank');
+  const [showArchiveModal, setShowArchiveModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const isProcessingRef = useRef(false);
+
+  if (!currentAccount) {
     return (
       <View style={[styles.container, { paddingTop: insets.top, padding: spacing.xl }]}>
         <Text style={styles.notFoundText}>Account not found</Text>
@@ -36,21 +48,20 @@ export default function EditAccountModal() {
     );
   }
 
-  const [name, setName] = useState(account.name);
-  const [type, setType] = useState<AccountType>(account.type);
-  const [showArchiveModal, setShowArchiveModal] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   // Check if account has transactions
   const hasTransactions = transactions.some(
-    (t) => t.accountId === account.id || t.fromAccountId === account.id || t.toAccountId === account.id
+    (t) =>
+      t.accountId === currentAccount.id ||
+      t.fromAccountId === currentAccount.id ||
+      t.toAccountId === currentAccount.id
   );
 
   const handleSave = async () => {
-    if (!name.trim()) return;
+    if (!name.trim() || !currentAccount || isProcessingRef.current) return;
+    isProcessingRef.current = true;
     setIsSubmitting(true);
     await updateAccount({
-      ...account,
+      ...currentAccount,
       name: name.trim(),
       type,
     });
@@ -60,14 +71,16 @@ export default function EditAccountModal() {
   };
 
   const handleToggleArchive = async () => {
+    if (!currentAccount || isProcessingRef.current) return;
+    isProcessingRef.current = true;
     setShowArchiveModal(false);
+    router.back();
     await updateAccount({
-      ...account,
-      isArchived: !account.isArchived,
+      ...currentAccount,
+      isArchived: !currentAccount.isArchived,
     });
     triggerHaptic.notificationWarning();
-    showToast(account.isArchived ? 'Account restored' : 'Account archived');
-    router.back();
+    showToast(currentAccount.isArchived ? 'Account restored' : 'Account archived');
   };
 
   return (
@@ -88,7 +101,10 @@ export default function EditAccountModal() {
       </View>
 
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingBottom: spacing.massive + insets.bottom },
+        ]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
@@ -99,7 +115,7 @@ export default function EditAccountModal() {
         />
 
         <Text style={styles.infoText}>
-          Type: {account.type.toUpperCase()} • Initial: ₹{Math.floor(account.initialBalance / 100)}
+          Type: {currentAccount.type.toUpperCase()} • Initial: ₹{Math.floor(currentAccount.initialBalance / 100)}
         </Text>
 
         <View style={styles.footer}>
@@ -115,13 +131,13 @@ export default function EditAccountModal() {
             style={styles.archiveButton}
             onPress={() => setShowArchiveModal(true)}
           >
-            {account.isArchived ? (
+            {currentAccount.isArchived ? (
               <ArchiveRestore size={16} color={colors.textSecondary} />
             ) : (
               <Archive size={16} color={colors.textSecondary} />
             )}
             <Text style={styles.archiveText}>
-              {account.isArchived ? 'Restore Account' : 'Archive Account'}
+              {currentAccount.isArchived ? 'Restore Account' : 'Archive Account'}
             </Text>
           </TouchableOpacity>
         </View>
@@ -130,17 +146,17 @@ export default function EditAccountModal() {
       {/* Confirmation Modal */}
       <ConfirmationModal
         visible={showArchiveModal}
-        title={account.isArchived ? 'Restore Account?' : 'Archive Account?'}
+        title={currentAccount.isArchived ? 'Restore Account?' : 'Archive Account?'}
         message={
-          account.isArchived
+          currentAccount.isArchived
             ? 'This will make the account visible again across the app.'
             : hasTransactions
             ? 'This account has transactions in history. Archiving will hide it from new entries while preserving all previous records and ledger history.'
             : 'Archiving hides the account from new entries.'
         }
-        confirmTitle={account.isArchived ? 'Restore' : 'Archive'}
+        confirmTitle={currentAccount.isArchived ? 'Restore' : 'Archive'}
         cancelTitle="Cancel"
-        isDestructive={!account.isArchived}
+        isDestructive={!currentAccount.isArchived}
         onConfirm={handleToggleArchive}
         onCancel={() => setShowArchiveModal(false)}
       />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -22,6 +22,7 @@ import { ConfirmationModal } from '../../components/ui/ConfirmationModal';
 import { formatMoney, parseMoneyInput } from '../../utils/money';
 import { formatDateHeader, formatTime } from '../../utils/date';
 import { triggerHaptic } from '../../utils/haptics';
+import { Transaction } from '../../types';
 
 export default function TransactionDetailModal() {
   const router = useRouter();
@@ -36,9 +37,34 @@ export default function TransactionDetailModal() {
     showToast,
   } = useStore();
 
+  const activeAccounts = accounts.filter((a) => !a.isArchived);
   const transaction = transactions.find((t) => t.id === id);
 
-  if (!transaction) {
+  // Preserve transaction across deletion/dismissal so that unmounting re-renders
+  // do not violate the Rules of Hooks or cause null crashes
+  const lastTxRef = useRef<Transaction | undefined>(transaction);
+  if (transaction) {
+    lastTxRef.current = transaction;
+  }
+  const currentTx = transaction || lastTxRef.current;
+
+  // Form states - must be called unconditionally at the top level
+  const [isEditing, setIsEditing] = useState(false);
+  const [amountStr, setAmountStr] = useState(
+    currentTx ? (currentTx.amount / 100).toString() : ''
+  );
+  const [accountId, setAccountId] = useState(
+    currentTx?.accountId || activeAccounts[0]?.id
+  );
+  const [note, setNote] = useState(currentTx?.note || '');
+  const [category, setCategory] = useState(currentTx?.category || '');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [error, setError] = useState<string | undefined>(undefined);
+  const [isSaving, setIsSaving] = useState(false);
+  const isDeletingRef = useRef(false);
+
+  // Safe early return after all hooks have been unconditionally registered
+  if (!currentTx) {
     return (
       <View style={[styles.container, { paddingTop: insets.top, padding: spacing.xl }]}>
         <Text style={styles.notFoundText}>Transaction not found</Text>
@@ -47,20 +73,6 @@ export default function TransactionDetailModal() {
     );
   }
 
-  const activeAccounts = accounts.filter((a) => !a.isArchived);
-
-  // Form states
-  const [isEditing, setIsEditing] = useState(false);
-  const [amountStr, setAmountStr] = useState(
-    (transaction.amount / 100).toString()
-  );
-  const [accountId, setAccountId] = useState(transaction.accountId || activeAccounts[0]?.id);
-  const [note, setNote] = useState(transaction.note || '');
-  const [category, setCategory] = useState(transaction.category || '');
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [error, setError] = useState<string | undefined>(undefined);
-  const [isSaving, setIsSaving] = useState(false);
-
   const getAccountName = (accId?: string) => {
     if (!accId) return 'None';
     const acc = accounts.find((a) => a.id === accId);
@@ -68,6 +80,7 @@ export default function TransactionDetailModal() {
   };
 
   const handleSaveEdit = async () => {
+    if (!currentTx) return;
     const parsed = parseMoneyInput(amountStr);
     if (!parsed.success) {
       setError(parsed.error);
@@ -78,9 +91,9 @@ export default function TransactionDetailModal() {
     setIsSaving(true);
     try {
       await updateTransaction({
-        ...transaction,
+        ...currentTx,
         amount: parsed.paise,
-        accountId: transaction.type === 'transfer' ? undefined : accountId,
+        accountId: currentTx.type === 'transfer' ? undefined : accountId,
         note: note.trim() || undefined,
         category: category.trim() || undefined,
       });
@@ -96,11 +109,17 @@ export default function TransactionDetailModal() {
   };
 
   const handleDelete = async () => {
+    if (isDeletingRef.current || !currentTx) return;
+    isDeletingRef.current = true;
     setShowDeleteModal(false);
-    await deleteTransaction(transaction.id);
-    triggerHaptic.notificationWarning();
-    showToast('Transaction deleted');
     router.back();
+    try {
+      await deleteTransaction(currentTx.id);
+      triggerHaptic.notificationWarning();
+      showToast('Transaction deleted');
+    } catch (e) {
+      console.error('Failed to delete transaction:', e);
+    }
   };
 
   return (
@@ -110,7 +129,7 @@ export default function TransactionDetailModal() {
     >
       <View style={styles.header}>
         <Text style={styles.headerTitle}>
-          {transaction.type.toUpperCase()}
+          {currentTx.type.toUpperCase()}
         </Text>
         <TouchableOpacity
           onPress={() => router.back()}
@@ -123,7 +142,10 @@ export default function TransactionDetailModal() {
       </View>
 
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingBottom: spacing.massive + insets.bottom },
+        ]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
@@ -140,7 +162,7 @@ export default function TransactionDetailModal() {
               error={error}
             />
 
-            {transaction.type !== 'transfer' ? (
+            {currentTx.type !== 'transfer' ? (
               <AccountSelector
                 accounts={activeAccounts}
                 selectedAccountId={accountId}
@@ -187,14 +209,14 @@ export default function TransactionDetailModal() {
           <View>
             <View style={styles.viewHero}>
               <Text style={styles.heroAmount}>
-                {transaction.type === 'income'
-                  ? `+${formatMoney(transaction.amount)}`
-                  : transaction.type === 'adjustment' && transaction.adjustmentDelta
-                  ? formatMoney(transaction.adjustmentDelta, '₹', { showPlus: true })
-                  : formatMoney(transaction.amount)}
+                {currentTx.type === 'income'
+                  ? `+${formatMoney(currentTx.amount)}`
+                  : currentTx.type === 'adjustment' && currentTx.adjustmentDelta
+                  ? formatMoney(currentTx.adjustmentDelta, '₹', { showPlus: true })
+                  : formatMoney(currentTx.amount)}
               </Text>
               <Text style={styles.heroDate}>
-                {formatDateHeader(transaction.createdAt)} at {formatTime(transaction.createdAt)}
+                {formatDateHeader(currentTx.createdAt)} at {formatTime(currentTx.createdAt)}
               </Text>
             </View>
 
@@ -202,11 +224,11 @@ export default function TransactionDetailModal() {
               <View style={styles.detailRow}>
                 <Text style={styles.detailLabel}>Type</Text>
                 <Text style={styles.detailValue}>
-                  {transaction.type === 'income'
+                  {currentTx.type === 'income'
                     ? 'Money In'
-                    : transaction.type === 'expense'
+                    : currentTx.type === 'expense'
                     ? 'Expense'
-                    : transaction.type === 'transfer'
+                    : currentTx.type === 'transfer'
                     ? 'Transfer'
                     : 'Reconciliation'}
                 </Text>
@@ -214,19 +236,19 @@ export default function TransactionDetailModal() {
 
               <View style={styles.divider} />
 
-              {transaction.type === 'transfer' ? (
+              {currentTx.type === 'transfer' ? (
                 <>
                   <View style={styles.detailRow}>
                     <Text style={styles.detailLabel}>From</Text>
                     <Text style={styles.detailValue}>
-                      {getAccountName(transaction.fromAccountId)}
+                      {getAccountName(currentTx.fromAccountId)}
                     </Text>
                   </View>
                   <View style={styles.divider} />
                   <View style={styles.detailRow}>
                     <Text style={styles.detailLabel}>To</Text>
                     <Text style={styles.detailValue}>
-                      {getAccountName(transaction.toAccountId)}
+                      {getAccountName(currentTx.toAccountId)}
                     </Text>
                   </View>
                 </>
@@ -234,27 +256,27 @@ export default function TransactionDetailModal() {
                 <View style={styles.detailRow}>
                   <Text style={styles.detailLabel}>Account</Text>
                   <Text style={styles.detailValue}>
-                    {getAccountName(transaction.accountId)}
+                    {getAccountName(currentTx.accountId)}
                   </Text>
                 </View>
               )}
 
-              {transaction.note ? (
+              {currentTx.note ? (
                 <>
                   <View style={styles.divider} />
                   <View style={styles.detailRow}>
                     <Text style={styles.detailLabel}>Note</Text>
-                    <Text style={styles.detailValue}>{transaction.note}</Text>
+                    <Text style={styles.detailValue}>{currentTx.note}</Text>
                   </View>
                 </>
               ) : null}
 
-              {transaction.category ? (
+              {currentTx.category ? (
                 <>
                   <View style={styles.divider} />
                   <View style={styles.detailRow}>
                     <Text style={styles.detailLabel}>Category</Text>
-                    <Text style={styles.detailValue}>{transaction.category}</Text>
+                    <Text style={styles.detailValue}>{currentTx.category}</Text>
                   </View>
                 </>
               ) : null}
